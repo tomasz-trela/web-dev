@@ -6,6 +6,21 @@
   background: linear-gradient(180deg, transparent 0%, rgba($color-mist, 0.45) 100%);
 }
 
+.photo-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: fn.space(4);
+
+  img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: $radius-lg;
+    border: 1px solid rgba($color-ink, 0.08);
+    box-shadow: $shadow-soft;
+  }
+}
+
 .split {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
@@ -36,7 +51,7 @@
       width: fn.space(2.2);
       height: fn.space(2.2);
       border-radius: 50%;
-      background: $color-clay;
+      background: $color-forest;
     }
 
     &:last-child {
@@ -46,8 +61,18 @@
 }
 
 @include respond(tablet) {
+  .photo-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .split {
     grid-template-columns: 1fr;
     gap: fn.space(4);
+  }
+}
+
+@include respond(mobile) {
+  .photo-strip {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,12 +1,12 @@
 $font-display: 'Space Grotesk', sans-serif;
 $font-body: 'Manrope', sans-serif;
 
-$color-sand: #f5efe4;
-$color-paper: #fffaf2;
-$color-ink: #1f242b;
-$color-clay: #cc5333;
-$color-forest: #295e5f;
-$color-mist: #e9dfd0;
+$color-sand: #dde1e6;
+$color-paper: #f7f8fa;
+$color-ink: #161a20;
+$color-clay: #d72f2f;
+$color-forest: #2563eb;
+$color-mist: #d7dbe1;
 
 $radius-sm: 0.5rem;
 $radius-md: 0.9rem;
@@ -20,8 +20,8 @@ $timing-fast: 180ms;
 $timing-mid: 320ms;
 
 $hero-gradient: radial-gradient(circle at 12% 16%, #ffe0b8 0%, transparent 42%),
-  radial-gradient(circle at 86% 8%, #ffd0c2 0%, transparent 38%),
-  linear-gradient(125deg, #efe4d3 0%, #dfe8d9 55%, #dae7ea 100%);
+  radial-gradient(circle at 86% 8%, #ffb8b8 0%, transparent 38%),
+  linear-gradient(125deg, #d6dce4 0%, #c8d0db 55%, #bdc8d4 100%);
 
 $breakpoints: (
   tablet: 920px,
