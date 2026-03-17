@@ -1,0 +1,53 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/functions' as fn;
+@use '../abstracts/mixins' as *;
+
+.section--alt {
+  background: linear-gradient(180deg, transparent 0%, rgba($color-mist, 0.45) 100%);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: fn.space(8);
+
+  p {
+    font-size: 1.05rem;
+    max-width: 38ch;
+  }
+}
+
+.benefits {
+  padding: fn.space(5);
+  border-radius: $radius-lg;
+  background: rgba($color-paper, 0.95);
+  border: 1px solid rgba($color-ink, 0.08);
+
+  li {
+    position: relative;
+    padding-left: fn.space(5);
+    margin-bottom: fn.space(3);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5em;
+      width: fn.space(2.2);
+      height: fn.space(2.2);
+      border-radius: 50%;
+      background: $color-clay;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+@include respond(tablet) {
+  .split {
+    grid-template-columns: 1fr;
+    gap: fn.space(4);
+  }
+}

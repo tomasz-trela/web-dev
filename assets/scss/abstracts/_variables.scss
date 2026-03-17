@@ -1,0 +1,29 @@
+$font-display: 'Space Grotesk', sans-serif;
+$font-body: 'Manrope', sans-serif;
+
+$color-sand: #f5efe4;
+$color-paper: #fffaf2;
+$color-ink: #1f242b;
+$color-clay: #cc5333;
+$color-forest: #295e5f;
+$color-mist: #e9dfd0;
+
+$radius-sm: 0.5rem;
+$radius-md: 0.9rem;
+$radius-lg: 1.3rem;
+
+$space-unit: 0.4rem;
+$container-width: 70rem;
+$shadow-soft: 0 12px 26px rgba($color-ink, 0.12);
+
+$timing-fast: 180ms;
+$timing-mid: 320ms;
+
+$hero-gradient: radial-gradient(circle at 12% 16%, #ffe0b8 0%, transparent 42%),
+  radial-gradient(circle at 86% 8%, #ffd0c2 0%, transparent 38%),
+  linear-gradient(125deg, #efe4d3 0%, #dfe8d9 55%, #dae7ea 100%);
+
+$breakpoints: (
+  tablet: 920px,
+  mobile: 640px
+);

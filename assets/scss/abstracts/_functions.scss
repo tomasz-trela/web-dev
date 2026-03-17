@@ -1,0 +1,14 @@
+@use 'variables' as *;
+@use 'sass:color';
+
+@function space($multiplier) {
+  @return $space-unit * $multiplier;
+}
+
+@function contrast-color($bg) {
+  @if color.channel($bg, 'lightness', $space: hsl) > 60% {
+    @return $color-ink;
+  }
+
+  @return $color-paper;
+}

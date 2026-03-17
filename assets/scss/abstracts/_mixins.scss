@@ -1,0 +1,43 @@
+@use 'sass:map';
+@use 'sass:color';
+@use 'variables' as *;
+@use 'functions' as fn;
+
+@mixin respond($point) {
+  @media (max-width: map.get($breakpoints, $point)) {
+    @content;
+  }
+}
+
+@mixin section-title {
+  font-family: $font-display;
+  font-size: clamp(1.4rem, 0.9rem + 1.4vw, 2.2rem);
+  letter-spacing: 0.02em;
+  margin-bottom: fn.space(5);
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    width: fn.space(14);
+    height: 3px;
+    background: linear-gradient(90deg, $color-clay, transparent);
+    margin-top: fn.space(2);
+  }
+}
+
+@mixin button-skin($bg) {
+  $text-color: fn.contrast-color($bg);
+
+  background-color: $bg;
+  color: $text-color;
+  border: 1px solid rgba($text-color, 0.1);
+  transition: transform $timing-fast ease, box-shadow $timing-fast ease,
+    background-color $timing-fast ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba($color-ink, 0.18);
+    background-color: color.adjust($bg, $lightness: -6%);
+  }
+}

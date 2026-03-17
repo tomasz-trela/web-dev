@@ -1,0 +1,113 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/functions' as fn;
+@use '../abstracts/mixins' as *;
+@use '../abstracts/placeholders' as *;
+
+.hero {
+  background: $hero-gradient;
+  padding: fn.space(5) 0 fn.space(16);
+
+  .site-nav {
+    @extend %panel;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: fn.space(3) fn.space(5);
+
+    .logo {
+      color: $color-ink;
+      text-decoration: none;
+      font-family: $font-display;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.95rem;
+    }
+
+    ul {
+      display: flex;
+      gap: fn.space(5);
+
+      a {
+        color: rgba($color-ink, 0.85);
+        text-decoration: none;
+        font-weight: 600;
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          bottom: -0.2rem;
+          width: 100%;
+          height: 2px;
+          background: $color-clay;
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform $timing-fast ease;
+        }
+
+        &:hover::after {
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+
+  .hero__content {
+    margin-top: fn.space(12);
+    max-width: 42rem;
+
+    .eyebrow {
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      font-size: 0.78rem;
+      color: $color-forest;
+    }
+
+    h1 {
+      margin-top: fn.space(4);
+      font-family: $font-display;
+      font-size: clamp(2rem, 1.1rem + 3.4vw, 4rem);
+      line-height: 1.08;
+    }
+
+    p {
+      margin-top: fn.space(4);
+      font-size: clamp(1.02rem, 0.97rem + 0.3vw, 1.22rem);
+      max-width: 38ch;
+    }
+
+    .button {
+      margin-top: fn.space(6);
+    }
+  }
+}
+
+@include respond(tablet) {
+  .hero {
+    .site-nav {
+      flex-direction: column;
+      gap: fn.space(2);
+      align-items: flex-start;
+    }
+  }
+}
+
+@include respond(mobile) {
+  .hero {
+    padding-bottom: fn.space(12);
+
+    .site-nav {
+      ul {
+        flex-wrap: wrap;
+        gap: fn.space(3);
+      }
+    }
+
+    .hero__content {
+      margin-top: fn.space(9);
+    }
+  }
+}

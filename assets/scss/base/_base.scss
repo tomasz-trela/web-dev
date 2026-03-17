@@ -1,0 +1,47 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/functions' as fn;
+@use '../abstracts/mixins' as *;
+
+body {
+  font-family: $font-body;
+  color: $color-ink;
+  line-height: 1.55;
+  background: linear-gradient(180deg, $color-sand 0%, $color-paper 100%);
+}
+
+.container {
+  width: min($container-width, calc(100% - #{fn.space(10)}));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: fn.space(14);
+}
+
+.section-title {
+  @include section-title;
+}
+
+.button {
+  @include button-skin($color-clay);
+
+  display: inline-flex;
+  align-items: center;
+  gap: fn.space(2);
+  text-decoration: none;
+  font-weight: 700;
+  padding: fn.space(3) fn.space(5);
+  border-radius: $radius-md + 0.2rem;
+}
+
+@for $i from 1 through 4 {
+  .u-mt-#{$i} {
+    margin-top: fn.space($i * 2);
+  }
+}
+
+@include respond(mobile) {
+  .section {
+    padding-block: fn.space(10);
+  }
+}
