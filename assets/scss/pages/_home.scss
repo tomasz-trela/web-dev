@@ -1,6 +1,6 @@
-@use '../abstracts/variables' as *;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as *;
+@use '../helpers/variables' as *;
+@use '../helpers/functions' as fn;
+@use '../helpers/mixins' as *;
 
 .section--alt {
   background: linear-gradient(180deg, transparent 0%, rgba($color-mist, 0.45) 100%);

@@ -1,5 +1,5 @@
-@use '../abstracts/variables' as *;
-@use '../abstracts/functions' as fn;
+@use '../helpers/variables' as *;
+@use '../helpers/functions' as fn;
 
 .footer {
   padding: fn.space(7) 0;

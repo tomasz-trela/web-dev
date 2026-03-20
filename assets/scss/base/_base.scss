@@ -1,6 +1,6 @@
-@use '../abstracts/variables' as *;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as *;
+@use '../helpers/variables' as *;
+@use '../helpers/functions' as fn;
+@use '../helpers/mixins' as *;
 
 body {
   font-family: $font-body;
@@ -20,18 +20,6 @@ body {
 
 .section-title {
   @include section-title;
-}
-
-.button {
-  @include button-skin($color-clay);
-
-  display: inline-flex;
-  align-items: center;
-  gap: fn.space(2);
-  text-decoration: none;
-  font-weight: 700;
-  padding: fn.space(3) fn.space(5);
-  border-radius: $radius-md + 0.2rem;
 }
 
 @for $i from 1 through 4 {

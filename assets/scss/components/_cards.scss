@@ -1,7 +1,7 @@
-@use '../abstracts/variables' as *;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/placeholders' as *;
-@use '../abstracts/mixins' as *;
+@use '../helpers/variables' as *;
+@use '../helpers/functions' as fn;
+@use '../helpers/placeholders' as *;
+@use '../helpers/mixins' as *;
 
 .cards-grid {
   display: grid;

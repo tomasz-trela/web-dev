@@ -1,7 +1,6 @@
-@use '../abstracts/variables' as *;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as *;
-@use '../abstracts/placeholders' as *;
+@use '../helpers/variables' as *;
+@use '../helpers/functions' as fn;
+@use '../helpers/mixins' as *;
 
 .hero {
   background: $hero-gradient;
@@ -19,54 +18,6 @@
       rgba($color-paper, 0.7) 0 18px,
       rgba($color-paper, 0) 18px 30px
     );
-  }
-
-  .site-nav {
-    @extend %panel;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: fn.space(3) fn.space(5);
-
-    .logo {
-      color: $color-ink;
-      text-decoration: none;
-      font-family: $font-display;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      font-size: 0.95rem;
-    }
-
-    ul {
-      display: flex;
-      gap: fn.space(5);
-
-      a {
-        color: rgba($color-ink, 0.85);
-        text-decoration: none;
-        font-weight: 600;
-        position: relative;
-
-        &::after {
-          content: '';
-          position: absolute;
-          left: 0;
-          bottom: -0.2rem;
-          width: 100%;
-          height: 2px;
-          background: $color-clay;
-          transform: scaleX(0);
-          transform-origin: left;
-          transition: transform $timing-fast ease;
-        }
-
-        &:hover::after {
-          transform: scaleX(1);
-        }
-      }
-    }
   }
 
   .hero__content {
@@ -99,26 +50,9 @@
   }
 }
 
-@include respond(tablet) {
-  .hero {
-    .site-nav {
-      flex-direction: column;
-      gap: fn.space(2);
-      align-items: flex-start;
-    }
-  }
-}
-
 @include respond(mobile) {
   .hero {
     padding-bottom: fn.space(12);
-
-    .site-nav {
-      ul {
-        flex-wrap: wrap;
-        gap: fn.space(3);
-      }
-    }
 
     .hero__content {
       margin-top: fn.space(9);
