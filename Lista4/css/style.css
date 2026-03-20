@@ -1,0 +1,258 @@
+html,
+body,
+header,
+#intro {
+	height: 100%;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+#intro {
+	background: url("../img/bg.jpg") no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+#intro .display-4,
+#intro .hr-light,
+#intro h4,
+#intro .btn {
+	animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+#intro .hr-light {
+	animation-delay: 0.12s;
+}
+
+#intro h4 {
+	animation-delay: 0.24s;
+}
+
+#intro .btn {
+	animation-delay: 0.36s;
+	animation-name: heroReveal, ctaFloat;
+	animation-duration: 0.9s, 3.2s;
+	animation-delay: 0.36s, 1.4s;
+	animation-iteration-count: 1, infinite;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1), ease-in-out;
+}
+
+#lastTravels .view {
+	overflow: hidden;
+}
+
+#lastTravels .col-lg-4 {
+	transition: transform 0.35s ease, box-shadow 0.35s ease;
+	will-change: transform;
+}
+
+#lastTravels .col-lg-4:hover {
+	transform: translateY(-8px);
+}
+
+#lastTravels .travel-img {
+	width: 100%;
+	height: 190px;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.6s ease;
+}
+
+#lastTravels .col-lg-4:hover .travel-img {
+	transform: scale(1.05);
+}
+
+#lastTravels .grey-text {
+	font-size: 0.95rem;
+	line-height: 1.6;
+}
+
+main section {
+	scroll-margin-top: 90px;
+}
+
+.reveal {
+	opacity: 0;
+	transform: translateY(28px) scale(0.985);
+	transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+	will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+	opacity: 1;
+	transform: none;
+}
+
+.reveal-delay-1 {
+	transition-delay: 0.08s;
+}
+
+.reveal-delay-2 {
+	transition-delay: 0.16s;
+}
+
+.reveal-delay-3 {
+	transition-delay: 0.24s;
+}
+
+#story .story-img {
+	width: 100%;
+	height: 340px;
+	object-fit: cover;
+	display: block;
+}
+
+#quote .blockquote {
+	font-size: 1.2rem;
+}
+
+#team .card-img-top {
+	height: 210px;
+	object-fit: cover;
+}
+
+#teamCarousel .carousel-item .card {
+	opacity: 0;
+	transform: translateY(18px);
+	transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+#teamCarousel .carousel-item.active .card {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+#teamCarousel .carousel-control-prev,
+#teamCarousel .carousel-control-next {
+	width: 5%;
+}
+
+#teamCarousel .carousel-control-prev-icon,
+#teamCarousel .carousel-control-next-icon {
+	background-color: rgba(0, 0, 0, 0.45);
+	border-radius: 50%;
+	padding: 16px;
+	background-size: 55% 55%;
+}
+
+#faq .card-header a {
+	color: #1e88e5;
+	display: block;
+}
+
+#faq .card-header a:hover {
+	text-decoration: none;
+}
+
+#faq .rotate-icon {
+	transition: transform 0.3s ease;
+}
+
+#faq .card-header a[aria-expanded="true"] .rotate-icon {
+	transform: rotate(180deg);
+}
+
+#faq .collapse .card-body {
+	opacity: 0;
+	transform: translateY(-6px);
+	transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+#faq .collapse.show .card-body {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+#chart .card {
+	border-radius: 12px;
+}
+
+#maps .map-card {
+	border-radius: 12px;
+	overflow: hidden;
+	transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+#maps .map-card:hover {
+	transform: translateY(-4px) scale(1.01);
+}
+
+#maps iframe {
+	width: 100%;
+	height: 420px;
+	border: 0;
+	display: block;
+}
+
+#contact .card {
+	border-radius: 12px;
+}
+
+#contact .form-control {
+	transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+#contact .form-control:focus {
+	box-shadow: 0 0 0 0.2rem rgba(30, 136, 229, 0.2);
+	border-color: #1e88e5;
+}
+
+#contact .btn {
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#contact .btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes heroReveal {
+	from {
+		opacity: 0;
+		transform: translateY(26px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes ctaFloat {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-3px);
+	}
+}
+
+@media (max-width: 767.98px) {
+	#story .story-img {
+		height: 240px;
+	}
+
+	#maps iframe {
+		height: 300px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	* {
+		animation: none !important;
+		transition: none !important;
+	}
+
+	.reveal {
+		opacity: 1;
+		transform: none;
+	}
+}
