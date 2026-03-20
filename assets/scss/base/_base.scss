@@ -19,7 +19,20 @@ body {
 }
 
 .section-title {
-  @include section-title;
+  font-family: $font-display;
+  font-size: clamp(1.4rem, 0.9rem + 1.4vw, 2.2rem);
+  letter-spacing: 0.02em;
+  margin-bottom: fn.space(5);
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    width: fn.space(14);
+    height: 3px;
+    background: linear-gradient(90deg, $color-clay, transparent);
+    margin-top: fn.space(2);
+  }
 }
 
 @for $i from 1 through 4 {
