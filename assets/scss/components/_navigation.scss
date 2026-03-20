@@ -11,7 +11,7 @@
   justify-content: space-between;
   padding: fn.space(3) fn.space(5);
 
-  .logo {
+  &__logo {
     color: $color-ink;
     text-decoration: none;
     font-family: $font-display;
@@ -21,11 +21,11 @@
     font-size: 0.95rem;
   }
 
-  ul {
+  &__list {
     display: flex;
     gap: fn.space(5);
 
-    a {
+    .site-nav__link {
       color: rgba($color-ink, 0.85);
       text-decoration: none;
       font-weight: 600;
@@ -61,7 +61,7 @@
 
 @include respond(mobile) {
   .site-nav {
-    ul {
+    &__list {
       flex-wrap: wrap;
       gap: fn.space(3);
     }

@@ -12,4 +12,9 @@
     gap: fn.space(3);
     flex-wrap: wrap;
   }
+
+  &__brand,
+  &__mail {
+    margin: 0;
+  }
 }

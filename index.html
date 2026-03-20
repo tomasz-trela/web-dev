@@ -15,63 +15,66 @@
   <body>
     <header class="hero">
       <nav class="site-nav container">
-        <a class="logo" href="#">Torque District</a>
-        <ul>
-          <li><a href="#modele">Modele</a></li>
-          <li><a href="#technologie">Technologie</a></li>
-          <li><a href="#kontakt">Kontakt</a></li>
+        <a class="site-nav__logo" href="#">Torque District</a>
+        <ul class="site-nav__list">
+          <li class="site-nav__item"><a class="site-nav__link" href="#modele">Modele</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="#technologie">Technologie</a></li>
+          <li class="site-nav__item"><a class="site-nav__link" href="#kontakt">Kontakt</a></li>
         </ul>
       </nav>
 
       <div class="container hero__content">
-        <p class="eyebrow">AUTO KULTURA / 2026</p>
-        <h1>Moc, design i technologia, ktora robi roznice na drodze.</h1>
-        <p>
+        <p class="hero__eyebrow">AUTO KULTURA / 2026</p>
+        <h1 class="hero__title">Moc, design i technologia, ktora robi roznice na drodze.</h1>
+        <p class="hero__lead">
           Pokazujemy samochody, ktore lacza osiagi z charakterem.
           Od miejskich hatchbackow po nowoczesne GT i elektryczne sportowe coupe.
         </p>
-        <a class="button" href="#modele">Zobacz modele</a>
+        <a class="btn hero__cta" href="#modele">Zobacz modele</a>
       </div>
     </header>
 
     <main>
-      <section class="section container" id="modele">
-        <h2 class="section-title">Wyroznione modele</h2>
-        <div class="cards-grid">
-          <article class="feature-card">
+      <section class="section container models" id="modele">
+        <h2 class="section-title models__title">Wyroznione modele</h2>
+        <div class="models__grid">
+          <article class="model-card">
             <img
+              class="model-card__image"
               src="https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1200"
               alt="Niebieski sedan BMW przy zielonym trawniku"
             />
-            <span class="pill">BMW / Sedan</span>
-            <h3>Blue BMW Sedan Near Green Lawn Grass</h3>
-            <p>
+            <span class="model-card__pill">BMW / Sedan</span>
+            <h3 class="model-card__title">Blue BMW Sedan Near Green Lawn Grass</h3>
+            <p class="model-card__text">
               Niebieski sedan BMW ustawiony przy zielonym trawniku.
               Kadr podkresla linie nadwozia i spokojne, dzienne oswietlenie.
             </p>
           </article>
 
-          <article class="feature-card">
+          <article class="model-card">
             <img
+              class="model-card__image"
               src="https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1200"
               alt="Czerwone Alfa Romeo C4 na drodze obok drzew"
             />
-            <span class="pill">Alfa Romeo / Coupe</span>
-            <h3>Red Alfa Romeo C4</h3>
-            <p>
+            <span class="model-card__pill">Alfa Romeo / Coupe</span>
+            <h3 class="model-card__title">Red Alfa Romeo C4</h3>
+            <p class="model-card__text">
               Czerwone Alfa Romeo C4 sfotografowane na drodze wsrod drzew.
               Zdjecie buduje dynamiczny klimat i sportowy charakter auta.
             </p>
           </article>
 
-          <article class="feature-card">
+          <article class="model-card">
             <img
+              class="model-card__image"
               src="https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&cs=tinysrgb&w=1200"
               alt="Czarny Chevrolet Corvette"
             />
-            <span class="pill">Chevrolet / Corvette</span>
-            <h3>Black Chevrolet Corvette</h3>
-            <p>
+            <span class="model-card__pill">Chevrolet / Corvette</span>
+            <h3 class="model-card__title">Black Chevrolet Corvette</h3>
+            <p class="model-card__text">
               Czarny Chevrolet Corvette pokazany z naciskiem na sylwetke coupe.
               Ujecie eksponuje niski profil i agresywny styl tego modelu.
             </p>
@@ -79,29 +82,29 @@
         </div>
       </section>
 
-      <section class="section container" aria-label="Galeria samochodow">
-        <h2 class="section-title">Galeria</h2>
-        <div class="photo-strip">
-          <img src="https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Supercar z boku" />
-          <img src="https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Wnetrze samochodu" />
-          <img src="https://images.pexels.com/photos/2365572/pexels-photo-2365572.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Reflektory samochodu noca" />
+      <section class="section container gallery" aria-label="Galeria samochodow">
+        <h2 class="section-title gallery__title">Galeria</h2>
+        <div class="gallery__strip">
+          <img class="gallery__image" src="https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Supercar z boku" />
+          <img class="gallery__image" src="https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Wnetrze samochodu" />
+          <img class="gallery__image" src="https://images.pexels.com/photos/2365572/pexels-photo-2365572.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Reflektory samochodu noca" />
         </div>
       </section>
 
-      <section class="section section--alt" id="technologie">
-        <div class="container split">
-          <div>
-            <h2 class="section-title">Co testujemy?</h2>
-            <p>
+      <section class="section tech-section tech-section--alt" id="technologie">
+        <div class="container tech-section__split">
+          <div class="tech-section__content">
+            <h2 class="section-title tech-section__title">Co testujemy?</h2>
+            <p class="tech-section__text">
               Analizujemy osiagi, zuzycie energii, systemy asysty i jakosc
               wykonania. Stawiamy na dane, ale i realne wrazenia z jazdy.
             </p>
           </div>
-          <ul class="benefits">
-            <li>przyspieszenie i elastycznosc napedu</li>
-            <li>hamowanie i stabilnosc przy predkosciach autostradowych</li>
-            <li>komfort kabiny i wyciszenie</li>
-            <li>multimedia, ADAS i funkcje smart</li>
+          <ul class="tech-section__benefits">
+            <li class="tech-section__benefit">przyspieszenie i elastycznosc napedu</li>
+            <li class="tech-section__benefit">hamowanie i stabilnosc przy predkosciach autostradowych</li>
+            <li class="tech-section__benefit">komfort kabiny i wyciszenie</li>
+            <li class="tech-section__benefit">multimedia, ADAS i funkcje smart</li>
           </ul>
         </div>
       </section>
@@ -109,8 +112,8 @@
 
     <footer class="footer" id="kontakt">
       <div class="container footer__content">
-        <p>Torque District</p>
-        <p>kontakt@torquedistrict.pl</p>
+        <p class="footer__brand">Torque District</p>
+        <p class="footer__mail">kontakt@torquedistrict.pl</p>
       </div>
     </footer>
   </body>

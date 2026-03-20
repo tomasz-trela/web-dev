@@ -3,19 +3,19 @@
 @use '../helpers/placeholders' as *;
 @use '../helpers/mixins' as *;
 
-.cards-grid {
+.models__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: fn.space(4);
 }
 
-.feature-card {
+.model-card {
   @extend %panel;
 
   padding: fn.space(3);
   transition: transform $timing-mid ease;
 
-  img {
+  &__image {
     width: 100%;
     height: 12.5rem;
     object-fit: cover;
@@ -23,14 +23,14 @@
     margin-bottom: fn.space(3);
   }
 
-  .pill,
-  h3,
-  p {
+  &__pill,
+  &__title,
+  &__text {
     margin-left: fn.space(2);
     margin-right: fn.space(2);
   }
 
-  .pill {
+  &__pill {
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
@@ -42,13 +42,13 @@
     font-size: 0.8rem;
   }
 
-  h3 {
+  &__title {
     font-family: $font-display;
     font-size: 1.35rem;
     margin-bottom: fn.space(2);
   }
 
-  p {
+  &__text {
     color: rgba($color-ink, 0.88);
   }
 
@@ -58,18 +58,18 @@
 }
 
 @include respond(tablet) {
-  .cards-grid {
+  .models__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @include respond(mobile) {
-  .cards-grid {
+  .models__grid {
     grid-template-columns: 1fr;
   }
 
-  .feature-card {
-    img {
+  .model-card {
+    &__image {
       height: 11rem;
     }
   }

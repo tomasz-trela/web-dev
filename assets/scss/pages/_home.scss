@@ -2,16 +2,16 @@
 @use '../helpers/functions' as fn;
 @use '../helpers/mixins' as *;
 
-.section--alt {
+.tech-section--alt {
   background: linear-gradient(180deg, transparent 0%, rgba($color-mist, 0.45) 100%);
 }
 
-.photo-strip {
+.gallery__strip {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: fn.space(4);
 
-  img {
+  .gallery__image {
     width: 100%;
     aspect-ratio: 16 / 10;
     object-fit: cover;
@@ -21,24 +21,24 @@
   }
 }
 
-.split {
+.tech-section__split {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: fn.space(8);
 
-  p {
+  .tech-section__text {
     font-size: 1.05rem;
     max-width: 38ch;
   }
 }
 
-.benefits {
+.tech-section__benefits {
   padding: fn.space(5);
   border-radius: $radius-lg;
   background: rgba($color-paper, 0.95);
   border: 1px solid rgba($color-ink, 0.08);
 
-  li {
+  .tech-section__benefit {
     position: relative;
     padding-left: fn.space(5);
     margin-bottom: fn.space(3);
@@ -61,18 +61,18 @@
 }
 
 @include respond(tablet) {
-  .photo-strip {
+  .gallery__strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .split {
+  .tech-section__split {
     grid-template-columns: 1fr;
     gap: fn.space(4);
   }
 }
 
 @include respond(mobile) {
-  .photo-strip {
+  .gallery__strip {
     grid-template-columns: 1fr;
   }
 }

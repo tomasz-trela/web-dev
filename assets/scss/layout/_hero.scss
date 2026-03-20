@@ -24,27 +24,27 @@
     margin-top: fn.space(12);
     max-width: 42rem;
 
-    .eyebrow {
+    .hero__eyebrow {
       font-weight: 800;
       letter-spacing: 0.12em;
       font-size: 0.78rem;
       color: $color-clay;
     }
 
-    h1 {
+    .hero__title {
       margin-top: fn.space(4);
       font-family: $font-display;
       font-size: clamp(2rem, 1.1rem + 3.4vw, 4rem);
       line-height: 1.08;
     }
 
-    p {
+    .hero__lead {
       margin-top: fn.space(4);
       font-size: clamp(1.02rem, 0.97rem + 0.3vw, 1.22rem);
       max-width: 38ch;
     }
 
-    .button {
+    .hero__cta {
       margin-top: fn.space(6);
     }
   }

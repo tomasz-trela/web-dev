@@ -2,7 +2,7 @@
 @use '../helpers/functions' as fn;
 @use '../helpers/mixins' as *;
 
-.button {
+.btn {
   @include button-skin($color-clay);
 
   display: inline-flex;
