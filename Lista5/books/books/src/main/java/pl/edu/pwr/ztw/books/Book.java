@@ -10,6 +10,6 @@ import lombok.Setter;
 public class Book {
     private int id;
     private String title;
-    private String author;
+    private Author author;
     private int pages;
 }

@@ -1,0 +1,53 @@
+package pl.edu.pwr.ztw.books;
+
+import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+@Service
+public class AuthorsService implements IAuthorsService {
+
+    private static List<Author> authorsRepo = new ArrayList<>();
+    private static int nextId = 4;
+
+    static {
+        authorsRepo.add(new Author(1, "Henryk", "Sienkiewicz"));
+        authorsRepo.add(new Author(2, "Stanisław", "Wyspiański"));
+        authorsRepo.add(new Author(3, "Adam", "Mickiewicz"));
+    }
+
+    @Override
+    public Collection<Author> getAuthors() {
+        return authorsRepo;
+    }
+
+    @Override
+    public Author getAuthor(int id) {
+        return authorsRepo.stream()
+                .filter(a -> a.getId() == id)
+                .findAny()
+                .orElse(null);
+    }
+
+    @Override
+    public Author addAuthor(Author author) {
+        author.setId(nextId++);
+        authorsRepo.add(author);
+        return author;
+    }
+
+    @Override
+    public Author updateAuthor(int id, Author author) {
+        Author existing = getAuthor(id);
+        if (existing == null) return null;
+        existing.setFirstName(author.getFirstName());
+        existing.setLastName(author.getLastName());
+        return existing;
+    }
+
+    @Override
+    public boolean deleteAuthor(int id) {
+        return authorsRepo.removeIf(a -> a.getId() == id);
+    }
+}
