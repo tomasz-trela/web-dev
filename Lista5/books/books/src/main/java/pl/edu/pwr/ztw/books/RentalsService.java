@@ -1,11 +1,12 @@
 package pl.edu.pwr.ztw.books;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class RentalsService implements IRentalsService {
@@ -33,8 +34,13 @@ public class RentalsService implements IRentalsService {
     public Rental rentBook(int bookId, String readerName) {
         Book book = booksService.getBook(bookId);
         if (book == null) return null;
-        Rental rental = new Rental(nextId++, book, readerName,
-                LocalDate.now().toString());
+        String[] nameParts = readerName.split(" ", 2);
+        String firstName = nameParts.length > 0 ? nameParts[0] : "";
+        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+        Reader reader = new Reader(nextId, firstName, lastName);
+        LocalDate now = LocalDate.now();
+        LocalDate due = now.plusWeeks(2); 
+        Rental rental = new Rental(nextId++, book, reader, now, due);
         rentalsRepo.add(rental);
         return rental;
     }

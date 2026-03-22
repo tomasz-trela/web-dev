@@ -1,20 +1,27 @@
 package pl.edu.pwr.ztw.books;
 
-import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 @Service
-public class BooksService implements IBooksService {
+public class BooksService implements IBooksService, org.springframework.beans.factory.InitializingBean {
+
+    @Autowired
+    private AuthorsService authorsService;
 
     private static List<Book> booksRepo = new ArrayList<>();
     private static int nextId = 4;
 
-    static {
-        Author author1 = new Author(1, "Henryk", "Sienkiewicz");
-        Author author2 = new Author(2, "Stanisław", "Wyspiański");
-        Author author3 = new Author(3, "Adam", "Mickiewicz");
+
+    @Override
+    public void afterPropertiesSet() {
+        Author author1 = authorsService.getAuthor(1);
+        Author author2 = authorsService.getAuthor(2);
+        Author author3 = authorsService.getAuthor(3);
         booksRepo.add(new Book(1, "Potop", author1, 936));
         booksRepo.add(new Book(2, "Wesele", author2, 150));
         booksRepo.add(new Book(3, "Dziady", author3, 292));

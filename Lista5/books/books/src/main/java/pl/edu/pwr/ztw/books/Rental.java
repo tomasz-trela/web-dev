@@ -1,4 +1,5 @@
 package pl.edu.pwr.ztw.books;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.Setter;
 public class Rental {
     private int id;
     private Book book;
-    private String readerName;
-    private String rentalDate;
+    private Reader reader;
+    private LocalDate rentalDate;
+    private LocalDate rentalDue;
 }
