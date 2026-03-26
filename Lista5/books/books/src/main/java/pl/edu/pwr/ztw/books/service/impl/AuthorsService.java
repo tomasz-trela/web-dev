@@ -1,9 +1,12 @@
-package pl.edu.pwr.ztw.books;
+package pl.edu.pwr.ztw.books.service.impl;
 
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import pl.edu.pwr.ztw.books.model.Author;
+import pl.edu.pwr.ztw.books.service.IAuthorsService;
 
 @Service
 public class AuthorsService implements IAuthorsService {

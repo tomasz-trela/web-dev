@@ -1,4 +1,4 @@
-package pl.edu.pwr.ztw.books;
+package pl.edu.pwr.ztw.books.service.impl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -7,6 +7,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import pl.edu.pwr.ztw.books.model.Book;
+import pl.edu.pwr.ztw.books.model.Reader;
+import pl.edu.pwr.ztw.books.model.Rental;
+import pl.edu.pwr.ztw.books.service.IBooksService;
+import pl.edu.pwr.ztw.books.service.IRentalsService;
 
 @Service
 public class RentalsService implements IRentalsService {

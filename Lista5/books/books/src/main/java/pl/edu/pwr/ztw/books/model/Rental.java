@@ -1,4 +1,5 @@
-package pl.edu.pwr.ztw.books;
+package pl.edu.pwr.ztw.books.model;
+
 import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;

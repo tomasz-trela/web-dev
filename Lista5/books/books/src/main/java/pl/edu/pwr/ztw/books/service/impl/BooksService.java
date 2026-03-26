@@ -1,14 +1,19 @@
-package pl.edu.pwr.ztw.books;
+package pl.edu.pwr.ztw.books.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
+import pl.edu.pwr.ztw.books.model.Author;
+import pl.edu.pwr.ztw.books.model.Book;
+import pl.edu.pwr.ztw.books.service.IBooksService;
+
 @Service
-public class BooksService implements IBooksService, org.springframework.beans.factory.InitializingBean {
+public class BooksService implements IBooksService, InitializingBean {
 
     @Autowired
     private AuthorsService authorsService;

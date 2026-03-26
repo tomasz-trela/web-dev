@@ -1,4 +1,4 @@
-package pl.edu.pwr.ztw.books;
+package pl.edu.pwr.ztw.books.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Author {
+public class Book {
     private int id;
-    private String firstName;
-    private String lastName;
+    private String title;
+    private Author author;
+    private int pages;
 }

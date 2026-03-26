@@ -1,6 +1,8 @@
-package pl.edu.pwr.ztw.books;
+package pl.edu.pwr.ztw.books.service;
 
 import java.util.Collection;
+
+import pl.edu.pwr.ztw.books.model.Rental;
 
 public interface IRentalsService {
     Collection<Rental> getRentals();
