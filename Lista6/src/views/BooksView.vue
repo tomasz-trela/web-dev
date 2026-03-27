@@ -10,7 +10,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="book in paginatedBooks" :key="book.id!">
+          <tr v-for="book in books" :key="book.id!">
             <td class="id-col">{{ book.id }}</td>
             <td class="title-col">{{ book.title }}</td>
             <td>{{ book.author.firstName }} {{ book.author.lastName }}</td>
@@ -24,12 +24,11 @@
               </button>
             </td>
           </tr>
-          <tr v-if="paginatedBooks.length === 0">
+          <tr v-if="books.length === 0">
             <td colspan="5" class="empty">Brak książek w bazie.</td>
           </tr>
         </tbody>
       </table>
-      <Pagination v-model="currentPage" :totalPages="totalPages" />
     </div>
 
     <ConfirmDialog
@@ -45,30 +44,50 @@
       v-model="showModal"
       :title="editingBook ? 'Edytuj książkę' : 'Nowa książka'"
       :saveLabel="editingBook ? 'Zapisz' : 'Dodaj'"
-      :saveDisabled="!form.authorId"
+      :saveDisabled="authors.length === 0"
       maxWidth="460px"
       @save="saveBook"
     >
       <div class="field">
         <label>Tytuł</label>
-        <input v-model="form.title" placeholder="np. Potop" required />
+        <input
+          v-model="form.title"
+          placeholder="np. Potop"
+          :class="{ 'has-error': submitting && invalidTitle }"
+          @focus="clearStatus"
+          @keypress="clearStatus"
+        />
       </div>
       <div class="field">
         <label>Liczba stron</label>
-        <input v-model.number="form.pages" type="number" min="1" placeholder="np. 936" required />
+        <input
+          v-model.number="form.pages"
+          type="number"
+          min="1"
+          placeholder="np. 936"
+          :class="{ 'has-error': submitting && invalidPages }"
+          @focus="clearStatus"
+          @keypress="clearStatus"
+        />
       </div>
       <div class="field">
         <label>Autor</label>
-        <select v-model="form.authorId" required>
+        <select
+          v-model="form.authorId"
+          :class="{ 'has-error': submitting && invalidAuthorId }"
+          @focus="clearStatus"
+        >
           <option value="" disabled>Wybierz autora...</option>
           <option v-for="author in authors" :key="author.id!" :value="author.id">
             {{ author.firstName }} {{ author.lastName }}
           </option>
         </select>
         <div v-if="authors.length === 0" class="hint">
-          Brak autorów &mdash; najpierw dodaj autora w sekcji <router-link to="/authors">Autorzy</router-link>.
+          Brak autorów - najpierw dodaj autora w sekcji <router-link to="/authors">Autorzy</router-link>.
         </div>
       </div>
+      <p v-if="error && submitting" class="error-message">Proszę wypełnić wskazane pola formularza</p>
+      <p v-if="success" class="success-message">Dane poprawnie zapisano</p>
     </BaseModal>
   </div>
 </template>
@@ -78,14 +97,11 @@ import { ref, computed, onMounted } from 'vue';
 import api from '@/api/client';
 import type { Author, Book, BookRequest } from '@/types';
 import PageHeader from '@/components/PageHeader.vue';
-import Pagination from '@/components/Pagination.vue';
 import BaseModal from '@/components/BaseModal.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 
 const books = ref<Book[]>([]);
 const authors = ref<Author[]>([]);
-const currentPage = ref(1);
-const pageSize = 5;
 const showModal = ref(false);
 const editingBook = ref<Book | null>(null);
 const showConfirm = ref(false);
@@ -95,6 +111,18 @@ const pendingDeleteTitle = ref('');
 const form = ref<{ title: string; pages: number | null; authorId: number | '' }>({
   title: '', pages: null, authorId: '',
 });
+const submitting = ref(false);
+const error = ref(false);
+const success = ref(false);
+
+const invalidTitle = computed(() => form.value.title === '');
+const invalidPages = computed(() => !form.value.pages || form.value.pages < 1);
+const invalidAuthorId = computed(() => form.value.authorId === '');
+
+const clearStatus = () => {
+  success.value = false;
+  error.value = false;
+};
 
 const deleteMessage = computed(() =>
   pendingDeleteTitle.value
@@ -102,11 +130,6 @@ const deleteMessage = computed(() =>
     : 'Czy na pewno chcesz usunac te ksiazke?'
 );
 
-const totalPages = computed(() => Math.max(1, Math.ceil(books.value.length / pageSize)));
-const paginatedBooks = computed(() => {
-  const start = (currentPage.value - 1) * pageSize;
-  return books.value.slice(start, start + pageSize);
-});
 
 const fetchAll = async () => {
   try {
@@ -124,14 +147,22 @@ const openModal = (book?: Book) => {
     pages: book?.pages ?? null,
     authorId: book?.author?.id ?? '',
   };
+  submitting.value = false;
+  error.value = false;
+  success.value = false;
   showModal.value = true;
 };
 
 const saveBook = async () => {
-  if (!form.value.authorId || !form.value.pages) return;
+  submitting.value = true;
+  clearStatus();
+  if (invalidTitle.value || invalidPages.value || invalidAuthorId.value) {
+    error.value = true;
+    return;
+  }
   const payload: BookRequest = {
     title: form.value.title,
-    pages: form.value.pages,
+    pages: form.value.pages!,
     authorId: form.value.authorId as number,
   };
   try {
@@ -141,7 +172,9 @@ const saveBook = async () => {
       await api.post<Book>('/books', payload);
     }
     await fetchAll();
-    showModal.value = false;
+    success.value = true;
+    submitting.value = false;
+    setTimeout(() => { showModal.value = false; }, 800);
   } catch (e) { console.error(e); }
 };
 
@@ -157,7 +190,6 @@ const confirmDelete = async () => {
   if (pendingDeleteId.value == null) return;
   try {
     await api.delete(`/books/${pendingDeleteId.value}`);
-    if (paginatedBooks.value.length === 1 && currentPage.value > 1) currentPage.value--;
     await fetchAll();
   } catch (e) { console.error(e); }
 };
@@ -177,6 +209,9 @@ onMounted(fetchAll);
   background: #fff; color: #2d3748;
 }
 .field input:focus, .field select:focus { border-color: #42b983; }
+.field input.has-error, .field select.has-error { border-color: #d33c40; }
+.error-message { color: #d33c40; font-weight: 500; margin: 0 0 8px; font-size: 0.9rem; }
+.success-message { color: #32a95d; font-weight: 500; margin: 0 0 8px; font-size: 0.9rem; }
 .hint { margin-top: 6px; font-size: 0.82rem; color: #a0aec0; }
 .hint a { color: #42b983; }
 </style>

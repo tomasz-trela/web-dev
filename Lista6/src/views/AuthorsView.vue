@@ -10,7 +10,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="author in paginatedAuthors" :key="author.id!">
+          <tr v-for="author in authors" :key="author.id!">
             <td class="id-col">{{ author.id }}</td>
             <td>{{ author.firstName }}</td>
             <td>{{ author.lastName }}</td>
@@ -23,12 +23,11 @@
               </button>
             </td>
           </tr>
-          <tr v-if="paginatedAuthors.length === 0">
+          <tr v-if="authors.length === 0">
             <td colspan="4" class="empty">Brak autorów w bazie.</td>
           </tr>
         </tbody>
       </table>
-      <Pagination v-model="currentPage" :totalPages="totalPages" />
     </div>
 
     <ConfirmDialog
@@ -48,12 +47,26 @@
     >
       <div class="field">
         <label>Imię</label>
-        <input v-model="form.firstName" placeholder="np. Adam" required />
+        <input
+          v-model="form.firstName"
+          placeholder="np. Adam"
+          :class="{ 'has-error': submitting && invalidFirstName }"
+          @focus="clearStatus"
+          @keypress="clearStatus"
+        />
       </div>
       <div class="field">
         <label>Nazwisko</label>
-        <input v-model="form.lastName" placeholder="np. Mickiewicz" required />
+        <input
+          v-model="form.lastName"
+          placeholder="np. Mickiewicz"
+          :class="{ 'has-error': submitting && invalidLastName }"
+          @focus="clearStatus"
+          @keypress="clearStatus"
+        />
       </div>
+      <p v-if="error && submitting" class="error-message">Proszę wypełnić wskazane pola formularza</p>
+      <p v-if="success" class="success-message">Dane poprawnie zapisano</p>
     </BaseModal>
   </div>
 </template>
@@ -63,20 +76,28 @@ import { ref, computed, onMounted } from 'vue';
 import api from '@/api/client';
 import type { Author, Book } from '@/types';
 import PageHeader from '@/components/PageHeader.vue';
-import Pagination from '@/components/Pagination.vue';
 import BaseModal from '@/components/BaseModal.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 
 const authors = ref<Author[]>([]);
 const books = ref<Book[]>([]);
-const currentPage = ref(1);
-const pageSize = 6;
 const showModal = ref(false);
 const editingAuthor = ref<Author | null>(null);
 const form = ref<Author>({ id: null, firstName: '', lastName: '' });
 const showConfirm = ref(false);
 const pendingDeleteId = ref<number | null>(null);
 const pendingDeleteName = ref('');
+const submitting = ref(false);
+const error = ref(false);
+const success = ref(false);
+
+const invalidFirstName = computed(() => form.value.firstName === '');
+const invalidLastName = computed(() => form.value.lastName === '');
+
+const clearStatus = () => {
+  success.value = false;
+  error.value = false;
+};
 
 const authorBooks = computed(() =>
   pendingDeleteId.value != null
@@ -92,11 +113,6 @@ const deleteMessage = computed(() => {
   return `Usuniecie autora "${name}" spowoduje rowniez usuniecie ${count === 1 ? 'ksiazki' : 'ksiazek'}: ${titles}.`;
 });
 
-const totalPages = computed(() => Math.max(1, Math.ceil(authors.value.length / pageSize)));
-const paginatedAuthors = computed(() => {
-  const start = (currentPage.value - 1) * pageSize;
-  return authors.value.slice(start, start + pageSize);
-});
 
 const fetchAll = async () => {
   try {
@@ -110,10 +126,19 @@ const fetchAll = async () => {
 const openModal = (author?: Author) => {
   editingAuthor.value = author ?? null;
   form.value = author ? { ...author } : { id: null, firstName: '', lastName: '' };
+  submitting.value = false;
+  error.value = false;
+  success.value = false;
   showModal.value = true;
 };
 
 const saveAuthor = async () => {
+  submitting.value = true;
+  clearStatus();
+  if (invalidFirstName.value || invalidLastName.value) {
+    error.value = true;
+    return;
+  }
   try {
     if (editingAuthor.value && form.value.id != null) {
       await api.put<Author>(`/authors/${form.value.id}`, form.value);
@@ -121,7 +146,9 @@ const saveAuthor = async () => {
       await api.post<Author>('/authors', form.value);
     }
     await fetchAll();
-    showModal.value = false;
+    success.value = true;
+    submitting.value = false;
+    setTimeout(() => { showModal.value = false; }, 800);
   } catch (e) { console.error(e); }
 };
 
@@ -137,7 +164,6 @@ const confirmDelete = async () => {
   if (pendingDeleteId.value == null) return;
   try {
     await api.delete(`/authors/${pendingDeleteId.value}`);
-    if (paginatedAuthors.value.length === 1 && currentPage.value > 1) currentPage.value--;
     await fetchAll();
   } catch (e) { console.error(e); }
 };
@@ -153,4 +179,7 @@ onMounted(fetchAll);
   font-size: 0.95rem; outline: none; box-sizing: border-box; transition: border-color 0.2s;
 }
 .field input:focus { border-color: #42b983; }
+.field input.has-error { border-color: #d33c40; }
+.error-message { color: #d33c40; font-weight: 500; margin: 0 0 8px; font-size: 0.9rem; }
+.success-message { color: #32a95d; font-weight: 500; margin: 0 0 8px; font-size: 0.9rem; }
 </style>
