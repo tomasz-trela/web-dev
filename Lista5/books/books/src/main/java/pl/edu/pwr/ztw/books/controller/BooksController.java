@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.ztw.books.model.Book;
 import pl.edu.pwr.ztw.books.model.BookRequest;
 import pl.edu.pwr.ztw.books.service.IBooksService;
+import pl.edu.pwr.ztw.books.service.IRentalsService;
 
 @RestController
 @RequestMapping("/api/books")
@@ -15,6 +16,9 @@ public class BooksController {
 
     @Autowired
     IBooksService booksService;
+
+    @Autowired
+    IRentalsService rentalsService;
 
     @GetMapping
     public ResponseEntity<Object> getBooks() {
@@ -45,8 +49,10 @@ public class BooksController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteBook(@PathVariable int id) {
-        if (!booksService.deleteBook(id))
+        if (booksService.getBook(id) == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        rentalsService.deleteRentalsByBook(id);
+        booksService.deleteBook(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

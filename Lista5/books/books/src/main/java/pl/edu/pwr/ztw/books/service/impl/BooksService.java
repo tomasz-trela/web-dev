@@ -20,7 +20,7 @@ public class BooksService implements IBooksService, InitializingBean {
     private AuthorsService authorsService;
 
     private static List<Book> booksRepo = new ArrayList<>();
-    private static int nextId = 4;
+    private static int nextId = 18;
 
     @Override
     public void afterPropertiesSet() {
