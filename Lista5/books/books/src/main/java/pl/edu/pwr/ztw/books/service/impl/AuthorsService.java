@@ -12,7 +12,7 @@ import pl.edu.pwr.ztw.books.service.IAuthorsService;
 public class AuthorsService implements IAuthorsService {
 
     private static List<Author> authorsRepo = new ArrayList<>();
-    private static int nextId = 4;
+    private static int nextId = 11;
 
     static {
         authorsRepo.add(new Author(1, "Henryk", "Sienkiewicz"));

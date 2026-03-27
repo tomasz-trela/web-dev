@@ -12,6 +12,7 @@ import pl.edu.pwr.ztw.books.model.Book;
 import pl.edu.pwr.ztw.books.model.Reader;
 import pl.edu.pwr.ztw.books.model.Rental;
 import pl.edu.pwr.ztw.books.service.IBooksService;
+import pl.edu.pwr.ztw.books.service.IReadersService;
 import pl.edu.pwr.ztw.books.service.IRentalsService;
 
 @Service
@@ -19,6 +20,9 @@ public class RentalsService implements IRentalsService {
 
     @Autowired
     IBooksService booksService;
+
+    @Autowired
+    IReadersService readersService;
 
     private static List<Rental> rentalsRepo = new ArrayList<>();
     private static int nextId = 1;
@@ -37,16 +41,13 @@ public class RentalsService implements IRentalsService {
     }
 
     @Override
-    public Rental rentBook(int bookId, String readerName) {
+    public Rental rentBook(int bookId, int readerId) {
         Book book = booksService.getBook(bookId);
         if (book == null) return null;
-        String[] nameParts = readerName.split(" ", 2);
-        String firstName = nameParts.length > 0 ? nameParts[0] : "";
-        String lastName = nameParts.length > 1 ? nameParts[1] : "";
-        Reader reader = new Reader(nextId, firstName, lastName);
+        Reader reader = readersService.getReader(readerId);
+        if (reader == null) return null;
         LocalDate now = LocalDate.now();
-        LocalDate due = now.plusWeeks(2); 
-        Rental rental = new Rental(nextId++, book, reader, now, due);
+        Rental rental = new Rental(nextId++, book, reader, now, now.plusWeeks(2));
         rentalsRepo.add(rental);
         return rental;
     }
@@ -54,5 +55,15 @@ public class RentalsService implements IRentalsService {
     @Override
     public boolean returnBook(int rentalId) {
         return rentalsRepo.removeIf(r -> r.getId() == rentalId);
+    }
+
+    @Override
+    public void deleteRentalsByBook(int bookId) {
+        rentalsRepo.removeIf(r -> r.getBook().getId() == bookId);
+    }
+
+    @Override
+    public void deleteRentalsByReader(int readerId) {
+        rentalsRepo.removeIf(r -> r.getReader().getId() == readerId);
     }
 }

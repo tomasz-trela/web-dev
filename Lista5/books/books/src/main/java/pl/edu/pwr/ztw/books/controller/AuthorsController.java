@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.ztw.books.model.Author;
 import pl.edu.pwr.ztw.books.service.IAuthorsService;
 import pl.edu.pwr.ztw.books.service.IBooksService;
+import pl.edu.pwr.ztw.books.service.IRentalsService;
 
 @RestController
 @RequestMapping("/api/authors")
@@ -18,6 +19,9 @@ public class AuthorsController {
 
     @Autowired
     IBooksService booksService;
+
+    @Autowired
+    IRentalsService rentalsService;
 
     @GetMapping
     public ResponseEntity<Object> getAuthors() {
@@ -49,6 +53,9 @@ public class AuthorsController {
         if (authorsService.getAuthor(id) == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+        booksService.getBooks().stream()
+                .filter(b -> b.getAuthor() != null && b.getAuthor().getId() == id)
+                .forEach(b -> rentalsService.deleteRentalsByBook(b.getId()));
         booksService.deleteBooksByAuthor(id);
         authorsService.deleteAuthor(id);
 

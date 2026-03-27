@@ -29,8 +29,8 @@ public class RentalsController {
 
     @PostMapping("/rent")
     public ResponseEntity<Object> rentBook(@RequestParam int bookId,
-                                            @RequestParam String readerName) {
-        Rental rental = rentalsService.rentBook(bookId, readerName);
+                                            @RequestParam int readerId) {
+        Rental rental = rentalsService.rentBook(bookId, readerId);
         if (rental == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(rental, HttpStatus.CREATED);
     }
