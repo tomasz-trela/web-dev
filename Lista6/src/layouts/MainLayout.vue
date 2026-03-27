@@ -3,10 +3,9 @@
     <header>
       <div class="header-inner">
         <router-link to="/" class="logo">
-          <span class="logo-icon">📚</span>
           <span class="logo-text">Biblioteka</span>
         </router-link>
-        <nav>
+        <nav class="navbar">
           <router-link to="/books">Książki</router-link>
           <router-link to="/authors">Autorzy</router-link>
         </nav>
@@ -40,16 +39,16 @@ header {
   display: flex; align-items: center; gap: 8px;
   text-decoration: none; color: #1a202c;
 }
-.logo-icon { font-size: 1.4rem; }
 .logo-text { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; }
 
-nav { display: flex; gap: 4px; }
-nav a {
+
+.navbar { display: flex; gap: 4px; }
+.navbar a {
   color: #4a5568; text-decoration: none; font-weight: 500; font-size: 0.9rem;
   padding: 6px 14px; border-radius: 8px; transition: background 0.15s, color 0.15s;
 }
-nav a:hover { background: #f7fafc; color: #1a202c; }
-nav a.router-link-active { background: #ebf8f2; color: #2d9c6e; }
+.navbar a:hover { background: #f7fafc; color: #1a202c; }
+.navbar a.router-link-active { background: #ebf8f2; color: #2d9c6e; }
 
 main { flex: 1; padding: 32px 24px; max-width: 1100px; width: 100%; margin: 0 auto; box-sizing: border-box; }
 

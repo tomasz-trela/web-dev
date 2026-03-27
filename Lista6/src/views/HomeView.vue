@@ -7,7 +7,6 @@
 
     <div class="cards">
       <router-link to="/books" class="card">
-        <div class="card-icon">📖</div>
         <div class="card-content">
           <h3>Książki</h3>
           <p>Przeglądaj, dodawaj, edytuj i usuwaj pozycje z księgozbioru.</p>
@@ -16,7 +15,6 @@
       </router-link>
 
       <router-link to="/authors" class="card">
-        <div class="card-icon">✍️</div>
         <div class="card-content">
           <h3>Autorzy</h3>
           <p>Zarządzaj bazą autorów dostępnych w systemie.</p>
