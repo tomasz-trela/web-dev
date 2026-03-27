@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import pl.edu.pwr.ztw.books.model.Book;
+import pl.edu.pwr.ztw.books.model.BookRequest;
 import pl.edu.pwr.ztw.books.service.IBooksService;
 
 @RestController
@@ -28,14 +29,16 @@ public class BooksController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addBook(@RequestBody Book book) {
-        return new ResponseEntity<>(booksService.addBook(book), HttpStatus.CREATED);
+    public ResponseEntity<Object> addBook(@RequestBody BookRequest request) {
+        Book book = booksService.addBook(request);
+        if (book == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(book, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateBook(@PathVariable int id,
-                                              @RequestBody Book book) {
-        Book updated = booksService.updateBook(id, book);
+                                              @RequestBody BookRequest request) {
+        Book updated = booksService.updateBook(id, request);
         if (updated == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import pl.edu.pwr.ztw.books.model.Author;
 import pl.edu.pwr.ztw.books.model.Book;
+import pl.edu.pwr.ztw.books.model.BookRequest;
 import pl.edu.pwr.ztw.books.service.IBooksService;
 
 @Service
@@ -20,7 +21,6 @@ public class BooksService implements IBooksService, InitializingBean {
 
     private static List<Book> booksRepo = new ArrayList<>();
     private static int nextId = 4;
-
 
     @Override
     public void afterPropertiesSet() {
@@ -46,24 +46,33 @@ public class BooksService implements IBooksService, InitializingBean {
     }
 
     @Override
-    public Book addBook(Book book) {
-        book.setId(nextId++);
+    public Book addBook(BookRequest request) {
+        Author author = authorsService.getAuthor(request.getAuthorId());
+        if (author == null) return null;
+        Book book = new Book(nextId++, request.getTitle(), author, request.getPages());
         booksRepo.add(book);
         return book;
     }
 
     @Override
-    public Book updateBook(int id, Book book) {
+    public Book updateBook(int id, BookRequest request) {
         Book existing = getBook(id);
         if (existing == null) return null;
-        existing.setTitle(book.getTitle());
-        existing.setAuthor(book.getAuthor());
-        existing.setPages(book.getPages());
+        Author author = authorsService.getAuthor(request.getAuthorId());
+        if (author == null) return null;
+        existing.setTitle(request.getTitle());
+        existing.setPages(request.getPages());
+        existing.setAuthor(author);
         return existing;
     }
 
     @Override
     public boolean deleteBook(int id) {
         return booksRepo.removeIf(b -> b.getId() == id);
+    }
+
+    @Override
+    public void deleteBooksByAuthor(int authorId) {
+        booksRepo.removeIf(b -> b.getAuthor() != null && b.getAuthor().getId() == authorId);
     }
 }

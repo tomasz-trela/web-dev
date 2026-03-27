@@ -1,6 +1,5 @@
 package pl.edu.pwr.ztw.books.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,10 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class Book {
-    private Integer id;
+public class BookRequest {
     private String title;
-    private Author author;
     private int pages;
+    private int authorId;
 }

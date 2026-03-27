@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import pl.edu.pwr.ztw.books.model.Author;
 import pl.edu.pwr.ztw.books.service.IAuthorsService;
+import pl.edu.pwr.ztw.books.service.IBooksService;
 
 @RestController
 @RequestMapping("/api/authors")
@@ -14,6 +15,9 @@ public class AuthorsController {
 
     @Autowired
     IAuthorsService authorsService;
+
+    @Autowired
+    IBooksService booksService;
 
     @GetMapping
     public ResponseEntity<Object> getAuthors() {
@@ -29,8 +33,7 @@ public class AuthorsController {
 
     @PostMapping
     public ResponseEntity<Object> addAuthor(@RequestBody Author author) {
-        return new ResponseEntity<>(authorsService.addAuthor(author),
-                HttpStatus.CREATED);
+        return new ResponseEntity<>(authorsService.addAuthor(author), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -43,8 +46,12 @@ public class AuthorsController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteAuthor(@PathVariable int id) {
-        if (!authorsService.deleteAuthor(id))
+        if (authorsService.getAuthor(id) == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        booksService.deleteBooksByAuthor(id);
+        authorsService.deleteAuthor(id);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
