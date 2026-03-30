@@ -9,6 +9,12 @@ import pl.edu.pwr.ztw.books.model.Reader;
 import pl.edu.pwr.ztw.books.service.IReadersService;
 import pl.edu.pwr.ztw.books.service.IRentalsService;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/readers")
 public class ReadersController {
@@ -20,8 +26,21 @@ public class ReadersController {
     IRentalsService rentalsService;
 
     @GetMapping
-    public ResponseEntity<Object> getReaders() {
-        return new ResponseEntity<>(readersService.getReaders(), HttpStatus.OK);
+    public ResponseEntity<Object> getReaders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Collection<Reader> all = readersService.getReaders();
+        List<Reader> content = all.stream()
+                .skip((long) page * size)
+                .limit(size)
+                .collect(Collectors.toList());
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", content);
+        response.put("page", page);
+        response.put("size", size);
+        response.put("totalElements", all.size());
+        response.put("totalPages", (int) Math.ceil((double) all.size() / size));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

@@ -1,6 +1,6 @@
 <template>
   <div class="page" style="max-width: 860px">
-    <PageHeader title="Autorzy" buttonLabel="+ Dodaj autora" @add="openModal()" />
+    <PageHeader title="Czytelnicy" buttonLabel="+ Dodaj czytelnika" @add="openModal()" />
 
     <div class="card">
       <table class="table">
@@ -10,21 +10,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="author in authors" :key="author.id!">
-            <td class="id-col">{{ author.id }}</td>
-            <td>{{ author.firstName }}</td>
-            <td>{{ author.lastName }}</td>
+          <tr v-for="reader in readers" :key="reader.id!">
+            <td class="id-col">{{ reader.id }}</td>
+            <td>{{ reader.firstName }}</td>
+            <td>{{ reader.lastName }}</td>
             <td class="actions-col">
-              <button class="btn-icon btn-edit" @click="openModal(author)" title="Edytuj">
+              <button class="btn-icon btn-edit" @click="openModal(reader)" title="Edytuj">
                 <svg viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zm-2.207 2.207L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/></svg>
               </button>
-              <button class="btn-icon btn-delete" @click="deleteAuthor(author.id!)" title="Usuń">
+              <button class="btn-icon btn-delete" @click="deleteReader(reader.id!)" title="Usuń">
                 <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zm-.5 5a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v5a.5.5 0 001 0v-5z" clip-rule="evenodd"/></svg>
               </button>
             </td>
           </tr>
-          <tr v-if="authors.length === 0">
-            <td colspan="4" class="empty">Brak autorów w bazie.</td>
+          <tr v-if="readers.length === 0">
+            <td colspan="4" class="empty">Brak czytelników w bazie.</td>
           </tr>
         </tbody>
       </table>
@@ -34,8 +34,8 @@
 
     <ConfirmDialog
       v-model="showConfirm"
-      title="Usuń autora"
-      :message="deleteMessage"
+      title="Usuń czytelnika"
+      :message="`Czy na pewno chcesz usunąć czytelnika &quot;${pendingDeleteName}&quot;? Wszystkie jego wypożyczenia zostaną usunięte.`"
       confirmLabel="Usuń"
       @confirm="confirmDelete"
       @cancel="showConfirm = false"
@@ -43,15 +43,15 @@
 
     <BaseModal
       v-model="showModal"
-      :title="editingAuthor ? 'Edytuj autora' : 'Nowy autor'"
-      :saveLabel="editingAuthor ? 'Zapisz' : 'Dodaj'"
-      @save="saveAuthor"
+      :title="editingReader ? 'Edytuj czytelnika' : 'Nowy czytelnik'"
+      :saveLabel="editingReader ? 'Zapisz' : 'Dodaj'"
+      @save="saveReader"
     >
       <div class="field">
         <label>Imię</label>
         <input
           v-model="form.firstName"
-          placeholder="np. Adam"
+          placeholder="np. Jan"
           :class="{ 'has-error': submitting && invalidFirstName }"
           @focus="clearStatus"
           @keypress="clearStatus"
@@ -61,7 +61,7 @@
         <label>Nazwisko</label>
         <input
           v-model="form.lastName"
-          placeholder="np. Mickiewicz"
+          placeholder="np. Kowalski"
           :class="{ 'has-error': submitting && invalidLastName }"
           @focus="clearStatus"
           @keypress="clearStatus"
@@ -76,20 +76,19 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import api from '@/api/client';
-import type { Author, Book, PagedResponse } from '@/types';
+import type { Reader, PagedResponse } from '@/types';
 import PageHeader from '@/components/PageHeader.vue';
 import BaseModal from '@/components/BaseModal.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import Pagination from '@/components/Pagination.vue';
 
-const authors = ref<Author[]>([]);
-const books = ref<Book[]>([]);
+const readers = ref<Reader[]>([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
 const pageSize = 5;
 const showModal = ref(false);
-const editingAuthor = ref<Author | null>(null);
-const form = ref<Author>({ id: null, firstName: '', lastName: '' });
+const editingReader = ref<Reader | null>(null);
+const form = ref<Reader>({ id: null, firstName: '', lastName: '' });
 const showConfirm = ref(false);
 const pendingDeleteId = ref<number | null>(null);
 const pendingDeleteName = ref('');
@@ -105,49 +104,26 @@ const clearStatus = () => {
   error.value = false;
 };
 
-const authorBooks = computed(() =>
-  pendingDeleteId.value != null
-    ? books.value.filter(b => b.author?.id === pendingDeleteId.value).map(b => b.title)
-    : []
-);
-
-const deleteMessage = computed(() => {
-  const name = pendingDeleteName.value;
-  const count = authorBooks.value.length;
-  if (count === 0) return `Czy na pewno chcesz usunac autora "${name}"?`;
-  const titles = authorBooks.value.join(', ');
-  return `Usuniecie autora "${name}" spowoduje rowniez usuniecie ${count === 1 ? 'ksiazki' : 'ksiazek'}: ${titles}.`;
-});
-
-
-const fetchAll = async () => {
+const fetchReaders = async () => {
   try {
-    const [authorsRes, booksRes] = await Promise.all([
-      api.get<PagedResponse<Author>>(`/authors?page=${currentPage.value - 1}&size=${pageSize}`),
-      api.get<PagedResponse<Book>>('/books?page=0&size=1000'),
-    ]);
-    authors.value = authorsRes.content;
-    totalPages.value = authorsRes.totalPages;
-    books.value = booksRes.content;
-    if (authors.value.length === 0 && currentPage.value > 1) {
-      currentPage.value = totalPages.value || 1;
-      return;
-    }
+    const res = await api.get<PagedResponse<Reader>>(`/readers?page=${currentPage.value - 1}&size=${pageSize}`);
+    readers.value = res.content;
+    totalPages.value = res.totalPages;
   } catch (e) { console.error(e); }
 };
 
-watch(currentPage, fetchAll);
+watch(currentPage, fetchReaders);
 
-const openModal = (author?: Author) => {
-  editingAuthor.value = author ?? null;
-  form.value = author ? { ...author } : { id: null, firstName: '', lastName: '' };
+const openModal = (reader?: Reader) => {
+  editingReader.value = reader ?? null;
+  form.value = reader ? { ...reader } : { id: null, firstName: '', lastName: '' };
   submitting.value = false;
   error.value = false;
   success.value = false;
   showModal.value = true;
 };
 
-const saveAuthor = async () => {
+const saveReader = async () => {
   submitting.value = true;
   clearStatus();
   if (invalidFirstName.value || invalidLastName.value) {
@@ -155,22 +131,22 @@ const saveAuthor = async () => {
     return;
   }
   try {
-    if (editingAuthor.value && form.value.id != null) {
-      await api.put<Author>(`/authors/${form.value.id}`, form.value);
+    if (editingReader.value && form.value.id != null) {
+      await api.put<Reader>(`/readers/${form.value.id}`, form.value);
     } else {
-      await api.post<Author>('/authors', form.value);
+      await api.post<Reader>('/readers', form.value);
     }
-    await fetchAll();
+    await fetchReaders();
     success.value = true;
     submitting.value = false;
     setTimeout(() => { showModal.value = false; }, 800);
   } catch (e) { console.error(e); }
 };
 
-const deleteAuthor = (id: number) => {
-  const author = authors.value.find(a => a.id === id);
+const deleteReader = (id: number) => {
+  const reader = readers.value.find(r => r.id === id);
   pendingDeleteId.value = id;
-  pendingDeleteName.value = author ? `${author.firstName} ${author.lastName}` : '';
+  pendingDeleteName.value = reader ? `${reader.firstName} ${reader.lastName}` : '';
   showConfirm.value = true;
 };
 
@@ -178,12 +154,12 @@ const confirmDelete = async () => {
   showConfirm.value = false;
   if (pendingDeleteId.value == null) return;
   try {
-    await api.delete(`/authors/${pendingDeleteId.value}`);
-    await fetchAll();
+    await api.delete(`/readers/${pendingDeleteId.value}`);
+    await fetchReaders();
   } catch (e) { console.error(e); }
 };
 
-onMounted(fetchAll);
+onMounted(fetchReaders);
 </script>
 
 <style scoped>

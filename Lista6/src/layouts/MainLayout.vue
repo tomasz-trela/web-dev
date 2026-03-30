@@ -8,6 +8,7 @@
         <nav class="navbar">
           <router-link to="/books">Książki</router-link>
           <router-link to="/authors">Autorzy</router-link>
+          <router-link to="/readers">Czytelnicy</router-link>
         </nav>
       </div>
     </header>

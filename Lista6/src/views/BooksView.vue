@@ -31,6 +31,8 @@
       </table>
     </div>
 
+    <Pagination v-model="currentPage" :totalPages="totalPages" />
+
     <ConfirmDialog
       v-model="showConfirm"
       title="Usuń książkę"
@@ -93,15 +95,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import api from '@/api/client';
-import type { Author, Book, BookRequest } from '@/types';
+import type { Author, Book, BookRequest, PagedResponse } from '@/types';
 import PageHeader from '@/components/PageHeader.vue';
 import BaseModal from '@/components/BaseModal.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
+import Pagination from '@/components/Pagination.vue';
 
 const books = ref<Book[]>([]);
 const authors = ref<Author[]>([]);
+const currentPage = ref(1);
+const totalPages = ref(1);
+const pageSize = 5;
 const showModal = ref(false);
 const editingBook = ref<Book | null>(null);
 const showConfirm = ref(false);
@@ -133,12 +139,21 @@ const deleteMessage = computed(() =>
 
 const fetchAll = async () => {
   try {
-    [books.value, authors.value] = await Promise.all([
-      api.get<Book[]>('/books'),
-      api.get<Author[]>('/authors'),
+    const [booksRes, authorsRes] = await Promise.all([
+      api.get<PagedResponse<Book>>(`/books?page=${currentPage.value - 1}&size=${pageSize}`),
+      api.get<PagedResponse<Author>>('/authors?page=0&size=1000'),
     ]);
+    books.value = booksRes.content;
+    totalPages.value = booksRes.totalPages;
+    authors.value = authorsRes.content;
+    if (books.value.length === 0 && currentPage.value > 1) {
+      currentPage.value = totalPages.value || 1;
+      return;
+    }
   } catch (e) { console.error(e); }
 };
+
+watch(currentPage, fetchAll);
 
 const openModal = (book?: Book) => {
   editingBook.value = book ?? null;

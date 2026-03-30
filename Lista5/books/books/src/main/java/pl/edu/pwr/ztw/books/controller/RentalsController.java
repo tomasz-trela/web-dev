@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.ztw.books.model.Rental;
 import pl.edu.pwr.ztw.books.service.IRentalsService;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/rentals")
 public class RentalsController {
@@ -16,8 +22,21 @@ public class RentalsController {
     IRentalsService rentalsService;
 
     @GetMapping
-    public ResponseEntity<Object> getRentals() {
-        return new ResponseEntity<>(rentalsService.getRentals(), HttpStatus.OK);
+    public ResponseEntity<Object> getRentals(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Collection<Rental> all = rentalsService.getRentals();
+        List<Rental> content = all.stream()
+                .skip((long) page * size)
+                .limit(size)
+                .collect(Collectors.toList());
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", content);
+        response.put("page", page);
+        response.put("size", size);
+        response.put("totalElements", all.size());
+        response.put("totalPages", (int) Math.ceil((double) all.size() / size));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
