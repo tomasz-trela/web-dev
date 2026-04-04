@@ -74,16 +74,26 @@
       </div>
       <div class="field">
         <label>Autor</label>
-        <select
-          v-model="form.authorId"
-          :class="{ 'has-error': submitting && invalidAuthorId }"
-          @focus="clearStatus"
-        >
-          <option value="" disabled>Wybierz autora...</option>
-          <option v-for="author in authors" :key="author.id!" :value="author.id">
-            {{ author.firstName }} {{ author.lastName }}
-          </option>
-        </select>
+        <div class="autocomplete" ref="dropdownRef">
+          <input
+            v-model="authorSearch"
+            :class="{ 'has-error': submitting && invalidAuthorId }"
+            placeholder="Wpisz imię lub nazwisko autora..."
+            @focus="dropdownOpen = true; clearStatus()"
+            @input="dropdownOpen = true"
+          />
+          <ul v-if="dropdownOpen && filteredAuthors.length > 0" class="autocomplete__list">
+            <li
+              v-for="author in filteredAuthors"
+              :key="author.id!"
+              class="autocomplete__option"
+              :class="{ selected: form.authorId === author.id }"
+              @mousedown.prevent="selectAuthor(author)"
+            >
+              {{ author.firstName }} {{ author.lastName }}
+            </li>
+          </ul>
+        </div>
         <div v-if="authors.length === 0" class="hint">
           Brak autorów - najpierw dodaj autora w sekcji <router-link to="/authors">Autorzy</router-link>.
         </div>
@@ -95,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import api from '@/api/client';
 import type { Author, Book, BookRequest, PagedResponse } from '@/types';
 import PageHeader from '@/components/PageHeader.vue';
@@ -130,6 +140,37 @@ const clearStatus = () => {
   error.value = false;
 };
 
+// Autocomplete dropdown
+const dropdownOpen = ref(false);
+const authorSearch = ref('');
+const dropdownRef = ref<HTMLElement | null>(null);
+
+const filteredAuthors = computed(() => {
+  const q = authorSearch.value.toLowerCase().trim();
+  if (!q) return authors.value;
+  return authors.value.filter(a =>
+    `${a.firstName} ${a.lastName}`.toLowerCase().includes(q)
+  );
+});
+
+const selectAuthor = (author: Author) => {
+  form.value.authorId = author.id!;
+  authorSearch.value = `${author.firstName} ${author.lastName}`;
+  dropdownOpen.value = false;
+};
+
+const onClickOutside = (e: MouseEvent) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(e.target as Node)) {
+    dropdownOpen.value = false;
+    // Restore selected author name or clear
+    const selected = authors.value.find(a => a.id === form.value.authorId);
+    authorSearch.value = selected ? `${selected.firstName} ${selected.lastName}` : '';
+  }
+};
+
+onMounted(() => document.addEventListener('click', onClickOutside));
+onUnmounted(() => document.removeEventListener('click', onClickOutside));
+
 const deleteMessage = computed(() =>
   pendingDeleteTitle.value
     ? `Czy na pewno chcesz usunac "${pendingDeleteTitle.value}"? Tej operacji nie mozna cofnac.`
@@ -162,6 +203,8 @@ const openModal = (book?: Book) => {
     pages: book?.pages ?? null,
     authorId: book?.author?.id ?? '',
   };
+  authorSearch.value = book?.author ? `${book.author.firstName} ${book.author.lastName}` : '';
+  dropdownOpen.value = false;
   submitting.value = false;
   error.value = false;
   success.value = false;
@@ -229,4 +272,19 @@ onMounted(fetchAll);
 .success-message { color: #32a95d; font-weight: 500; margin: 0 0 8px; font-size: 0.9rem; }
 .hint { margin-top: 6px; font-size: 0.82rem; color: #a0aec0; }
 .hint a { color: #42b983; }
+
+/* Autocomplete */
+.autocomplete { position: relative; }
+.autocomplete__list {
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 50;
+  list-style: none; margin: 2px 0 0; padding: 4px 0;
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08); max-height: 180px; overflow-y: auto;
+}
+.autocomplete__option {
+  padding: 8px 12px; cursor: pointer; font-size: 0.93rem; color: #2d3748;
+  transition: background 0.15s;
+}
+.autocomplete__option:hover { background: #f0fff4; }
+.autocomplete__option.selected { background: #e6fffa; color: #42b983; font-weight: 600; }
 </style>

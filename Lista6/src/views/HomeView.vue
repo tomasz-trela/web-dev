@@ -21,6 +21,14 @@
         </div>
         <span class="card-arrow">&#8594;</span>
       </router-link>
+
+      <router-link to="/readers" class="card">
+        <div class="card-content">
+          <h3>Czytelnicy</h3>
+          <p>Przeglądaj i zarządzaj czytelnikami biblioteki.</p>
+        </div>
+        <span class="card-arrow">&#8594;</span>
+      </router-link>
     </div>
   </div>
 </template>
