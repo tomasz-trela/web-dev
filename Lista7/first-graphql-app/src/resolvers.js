@@ -11,7 +11,7 @@ export const resolvers = {
         users: () => db.prepare('SELECT * FROM users').all(),
         user: (_, { id }) => db.prepare('SELECT * FROM users WHERE id = ?').get(id) ?? null,
         todos: () => db.prepare('SELECT * FROM todos').all().map(mapTodo),
-        todo: (_, { id }) => db.prepare('SELECT * FROM todos WHERE id = ?').get(id) ?? null,
+        todo: (_, { id }) => mapTodo(db.prepare('SELECT * FROM todos WHERE id = ?').get(id)) ?? null,
     },
     
     User: { 
