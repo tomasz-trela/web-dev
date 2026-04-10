@@ -29,6 +29,14 @@
         </div>
         <span class="card-arrow">&#8594;</span>
       </router-link>
+
+      <router-link to="/rentals" class="card">
+        <div class="card-content">
+          <h3>Wypożyczalnia</h3>
+          <p>Zarządzaj wypożyczeniami i zwrotami książek.</p>
+        </div>
+        <span class="card-arrow">&#8594;</span>
+      </router-link>
     </div>
   </div>
 </template>
