@@ -31,7 +31,6 @@ export class RoomManager {
   removeUser(socketId: string): User | undefined {
     const user = this.users.get(socketId);
     if (user) {
-      // Remove from all rooms
       for (const room of this.rooms.values()) {
         room.users.delete(socketId);
       }

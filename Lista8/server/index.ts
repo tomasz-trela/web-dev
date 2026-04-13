@@ -27,11 +27,9 @@ io.on('connection', (socket) => {
     const user = roomManager.addUser(socket.id, data.nickname);
     const defaultRoom = 'Ogólny';
 
-    // Join default room
     socket.join(defaultRoom);
     roomManager.joinRoom(socket.id, defaultRoom);
 
-    // System message
     const sysMsg: Message = {
       id: generateId(),
       type: 'system',
@@ -56,7 +54,6 @@ io.on('connection', (socket) => {
       },
     });
 
-    // Broadcast updated user list and room list
     io.to(defaultRoom).emit('room:users', roomManager.getRoomUsers(defaultRoom));
     io.emit('room:list', roomManager.getRoomList());
   });
@@ -65,7 +62,6 @@ io.on('connection', (socket) => {
     const user = roomManager.getUser(socket.id);
     if (!user) return;
 
-    // Leave current room
     const currentRoom = user.currentRoom;
     if (currentRoom) {
       socket.leave(currentRoom);
@@ -194,7 +190,6 @@ io.on('connection', (socket) => {
 
     roomManager.removeUser(socket.id);
 
-    // Update user lists and room list
     for (const roomName of userRooms) {
       io.to(roomName).emit('room:users', roomManager.getRoomUsers(roomName));
     }
